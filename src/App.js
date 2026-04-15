@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import ConnectWallet from './components/ConnectWallet';
+import Dashboard from './components/Dashboard';
 
 function App() {
+  const [connected, setConnected] = useState(false);
+  const [publicKey, setPublicKey] = useState("");
+  const [balance, setBalance] = useState("0");
+
+  const handleConnect = (key, bal) => {
+    setPublicKey(key);
+    setBalance(Number(bal).toFixed(2));
+    setConnected(true);
+  };
+
+  const handleDisconnect = () => {
+    setConnected(false);
+    setPublicKey("");
+    setBalance("0");
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {!connected ? (
+        <ConnectWallet onConnect={handleConnect} />
+      ) : (
+        <Dashboard 
+          publicKey={publicKey} 
+          initialBalance={balance} 
+          onDisconnect={handleDisconnect} 
+        />
+      )}
+    </>
   );
 }
 
